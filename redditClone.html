@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html ng-app="redditApp" ng-controller="formController">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="redditStyle.css" media="screen" charset="utf-8">
+  </head>
+  <body ng-init="posts=posts">
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <span class="clone"> Reddit Clone </span>
+        </a>
+        <ul class="nav navbar-nav">
+          <li>
+            <a href="#" ng-click="submitPost.showForm = !submitPost.showForm"><i class="fa fa-plus-circle" aria-hidden="true"></i> Submit Post</a>
+          </li>
+          <li uib-dropdown>
+            <a href="#" uib-dropdown-toggle role="button"> Click to sort posts <span class="caret"></span></a>
+            <ul uib-dropdown-menu>
+              <li ng-click="view.sortOrder = '-votes'"> Sort by votes </li>
+              <li ng-click="view.sortOrder = '-date'"> Sort by date </li>
+              <li ng-click="view.sortOrder = 'title'"> Sort by title </li>
+            </ul>
+          </li>
+        </ul>
+        <div class="navbar-form navbar-left" role="search" name="searchForm">
+          <input type="text" class="form-control" placeholder="Search" ng-model="searchText">
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <form name="createPost" action="#" novalidate ng-show='submitPost.showForm == true' ng-submit="formSubmit(post)">
+        <postTitle class='form-group' ng-class="{'has-error': createPost.title.$dirty && createPost.title.$invalid, 'has-success': createPost.title.$valid}">
+          <label for="title"> Title </label>
+          <input class='form-control' type="text" name="title" placeholder="Title" ng-model="post.title" required ng-minlength=3 ng-max-length=30>
+          <div class="" ng-show="createPost.title.$dirty && createPost.title.$invalid">
+            <div class="" ng-show="createPost.title.$error.required">
+              <p> The title of your post is required </p>
+            </div>
+            <div class="" ng-show="createPost.title.$error.minlength">
+              <p> The title of your post must be at least three characters </p>
+            </div>
+            <div class="" ng-show="createPost.title.$error.maxlength">
+              <p> The title of your post is limited to 30 characters </p>
+            </div>
+          </div>
+        </postTitle>
+        <br>
+        <postAuthor class='form-group' ng-class="{'has-error': createPost.author.$dirty && createPost.author.$invalid, 'has-success': createPost.author.$valid}">
+          <label for="author"> Author </label>
+          <input class='form-control' type="text" name="author" placeholder="Author" ng-model="post.author" required ng-minlength=3 ng-max-length=30>
+          <div class="" ng-show="createPost.author.$dirty && createPost.author.$invalid">
+            <div class="" ng-show="createPost.author.$error.required">
+              <p> The author of your post is required </p>
+            </div>
+            <div class="" ng-show="createPost.author.$error.minlength">
+              <p> The author of your post must be at least three characters </p>
+            </div>
+            <div class="" ng-show="createPost.author.$error.maxlength">
+              <p> The author of your post is limited to 30 characters </p>
+            </div>
+          </div>
+        </postAuthor>
+        <br>
+        <imageURL class='form-group' ng-class="{'has-error': createPost.imageURL.$dirty && createPost.imageURL.$invalid, 'has-success': createPost.imageURL.$valid && createPost.imageURL.$dirty}">
+          <label for="imageURL"> Image URL </label>
+          <input class='form-control' type="url" name="imageURL" placeholder="Image URL" ng-model="post.imageURL">
+          <div class="" ng-show="createPost.imageURL.$dirty && createPost.imageURL.$invalid">
+            <div class="" ng-show="createPost.imageURL.$invalid">
+              <p> Please correct the format of your image URL ('http://...') </p>
+            </div>
+          </div>
+        </imageURL>
+        <br>
+        <description class='form-group' ng-class="{'has-error': createPost.description.$dirty && createPost.description.$invalid, 'has-success': createPost.description.$valid && createPost.description.$dirty}">
+          <label for="description"> Description </label>
+          <input class='form-control' type="text" name="description" placeholder="Description" required ng-model="post.description">
+          <div class="" ng-show="createPost.description.$dirty && createPost.description.$invalid">
+            <div class="" ng-show="createPost.description.$error.required">
+              <p> Please include a description for your post </p>
+            </div>
+          </div>
+        </description>
+        <br>
+        <button type="submit" class="btn btn-primary" ng-disabled="createPost.$invalid">Submit</button>
+      </form>
+
+      <displayPosts>
+        <div ng-repeat="post in posts | orderBy: view.sortOrder | filter:searchText">
+          <postBox class="col-md-12">
+            <imageBox class="col-md-3">
+              <img class = "image" ng-src= "{{post.imageURL}}" />
+            </imageBox>
+            <titleDisplay class="col-md-8 titleDisplay">
+              {{post.title}} |
+              <i class="fa fa-arrow-up" aria-hidden="true" ng-click="upvote(post)"></i>
+              <i class="fa fa-arrow-down" aria-hidden="true" ng-click="downvote(post)"></i>
+              <span ng-class="{'positive':post.votes>0, 'negative':post.votes<0}"> {{post.votes}} </span>
+            </titleDisplay>
+            <authorDisplay class="col-md-8 authorDisplay">
+              By {{post.author}}
+            </authorDisplay>
+            <descDisplay class="col-md-8 descDisplay">
+              {{post.description}}
+            </descDisplay>
+            <otherInfo class="col-md-8 col-md-offset-3">
+              <date>
+                <i class="fa fa-calendar" aria-hidden="true"></i>
+                {{post.date | date: 'EEEE, LLLL d yyyy @ h:mma'}}
+              </date> |
+              <totalComments>
+                <a ng-click="post.showComments = !post.showComments" title="Click to show comments">
+                  <i class="fa fa-comments-o" aria-hidden="true"></i>
+                  {{post.commentTally}} <ng-pluralize count='post.commentTally' when="{'1': 'comment', 'other': 'comments'}">
+                  </ng-pluralize>
+                </a>
+              </totalComments> |
+              <addComment>
+                <a ng-click="post.addComments = !post.addComments; post.showComments = true" title="Click to add a comment">
+                  <i class="fa fa-pencil" aria-hidden="true"></i>
+                  Add comment
+                </a>
+              </addComment>
+            </otherInfo>
+            <showComments class="col-md-8 col-md-offset-3" ng-show="post.showComments === true">
+              <div ng-repeat="comment in post.comments">
+                <span style="font-weight: bold"> {{comment.username}} </span> -
+                <span> {{comment.commentText}} </span>
+              </div>
+            </showComments>
+            <form class="col-md-8 col-md-offset-3" name="addComment" ng-show="post.addComments === true" ng-submit="addNewComment(post, comment)">
+              <label for="username" style="margin-left: 40px"> Author </label>
+              <input type="text" name="username" placeholder="username" required ng-model="comment.username">
+              <label for="commentText"> Comment </label>
+              <input type="text" name="commentText" placeholder="type comment here" required ng-model="comment.commentText">
+              <button type="submit" class="btn btn-default" ng-disabled="addComment.$invalid">Add Comment</button>
+            </form>
+          </postBox>
+        </div>
+      </displayPosts>
+    </div>
+
+    <script type="text/javascript" src='https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js'>
+    </script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.js"></script>
+    <script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.3.2/ui-bootstrap.js'>
+    </script>
+    <script type="text/javascript" src="redditClone.js" charset="utf-8"></script>
+  </body>
+</html>

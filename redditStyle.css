@@ -1,0 +1,111 @@
+.ng-enter {
+  opacity: 0;
+  transition: 1s linear all;
+  -webkit-transition: 1s linear all;
+}
+
+.ng-enter.ng-enter-active {
+  opacity: 1;
+  transition: 1s linear all;
+  -webkit-transition: 1s linear all;
+}
+
+.ng-leave {
+  opacity: 1;
+  transition: 1s linear all;
+  -webkit-transition: 1s linear all;
+}
+
+.ng-leave.ng-leave-active {
+  opacity: 0;
+  transition: 1s linear all;
+  -webkit-transition: 1s linear all;
+}
+
+.clone {
+  color: #BB9E97;
+}
+
+postBox {
+  border: solid 1px #BB9E97;
+  border-radius: 20px;
+  display: inline-block;
+  margin-top: 20px;
+  background-color: #F8F8F8;
+}
+
+imageBox {
+  height: 220px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: -10px;
+}
+
+imageBox img {
+  max-height: 200px;
+  margin-left: -15px;
+}
+
+a {
+  color: black;
+}
+
+titleDisplay {
+  font-size: 24px;
+  font-weight: bold;
+  margin-left: 40px;
+  margin-top: 20px;
+}
+
+authorDisplay {
+  font-size: 18px;
+  margin-left: 40px;
+  margin-top: 10px;
+}
+
+descDisplay {
+  font-size: 16px;
+  margin-left: 40px;
+  margin-top: 10px;
+  display: inline-block;
+}
+
+otherInfo {
+  margin-left: 40px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+
+otherInfo date {
+  margin-left: 40px;
+}
+
+showComments div {
+  margin-left: 40px;
+}
+
+input.has-error {
+  border: 1px solid red;
+}
+
+.has-error {
+  color: red
+}
+
+.negative {
+  color: red
+}
+
+input.has-success {
+  border: 1px solid green;
+  color: green;
+}
+
+.has-success {
+  color: green;
+}
+
+.positive {
+  color: green;
+}
