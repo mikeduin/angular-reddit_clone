@@ -8,4 +8,4 @@ app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, '/redditClone.html'));
 })
 
-app.listen(3000);
+.listen(process.env.PORT || 3000);
